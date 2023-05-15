@@ -1,0 +1,406 @@
+<html>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+<style>	
+	#tftpixels td{
+		height:20px;
+		width:20px}
+	.pixel{
+		height:20px;
+		width:20px;	
+		background:#f1f1f1;
+		cursor:pointer}
+	.pixel.selected{
+		background:grey}
+	#tftpixels{		
+		width:100%}
+	.pixel:hover {
+		background-color:#DCDCDC;}
+	.pixel.selected:hover{
+		background-color: #696969;}
+		
+	.workspace {
+	  height: 100%;
+	  position: fixed;
+	  width: 100%;
+	  top: 0;
+	  left: 0;
+	  
+	}
+	p:hover {
+		color: grey;
+	}
+</style>
+</head>
+	<body style="margin: 0; font-family: Arial, Helvetica, sans-serif; ">
+	
+	<div class="w3-sidebar w3-light-grey " style="width:240px;"><br><br>
+		
+		<b style=" margin-left:10px; text-align: left; font-size: 18px;"><i class="fa fa-pencil-square-o "></i> Edit pixel art image</b>
+		
+		<button onclick="myFunction('Demo1')" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-sliders"></i>  Set an array width <span style="color:#FF0000">*</span><i class="fa fa-chevron-down w3-right"></i></button>
+		<div id="Demo1" class="w3-hide w3-light-grey">
+			<input id="width_input" style='width:150; margin-left:47px;' placeholder='Max width : 32'>
+		</div>
+
+		<button onclick="myFunction('Demo2')" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-sliders"></i>  Set an array height <span style="color:#FF0000">*</span><i class="fa fa-chevron-down w3-right"></i></button>
+		<div id="Demo2" class="w3-hide w3-light-grey">
+			<input id="height_input"  style='width:150; margin-left:47px;' placeholder='Max height : 32'>
+		</div>
+		
+		<button onclick="myFunction('Demo3')" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-clipboard"></i>  Import project <i class="fa fa-chevron-down w3-right"></i></button>
+		<div id="Demo3" class="w3-hide w3-light-grey">
+			<input id="importedproject" style='width:150; margin-left:47px;' placeholder='0b1011... or 0xA6F...'>	
+		</div>
+		
+		<button onclick="setSizing()" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i style="color: green;" class="fa fa-refresh"></i>  Apply changes <i class="fa fa-toggle-on w3-right"></i></button>
+		
+		<button onclick="eraseAll()" style="width:205; margin-left:15px; text-align: left;" class="w3-button "><i  style="color: red;" class="fa fa fa-eraser"></i>  Erase all <i class="fa fa-toggle-on w3-right"></i></button>
+		
+		<button id="toggleMatrixOrArray1" onclick="toggleMatrixOrArray()" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey" ><i class="fa fa-th"></i>  Show binary array <i class="fa fa-toggle-on w3-right"></i></button><br><br>
+		
+		<b style=" margin-left:10px; text-align: left; font-size: 18px;"><i class="fa fa-pencil-square-o"></i> Output image</b>
+		
+		<button onclick="bingenerator()" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-file-code-o"></i>  Copy BIN project <i class="fa fa-files-o w3-right"></i></button>
+		<input id="binoutput"  style='width:150; margin-left:47px; ' placeholder='Binary output' disabled>
+		
+		<button onclick="hexgenerator()" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-file-code-o"></i>  Copy HEX project <i class="fa fa-files-o w3-right"></i></button>
+		<input id="hexoutput"  style='width:150; margin-left:47px; ' placeholder='Hexadecimal output' disabled>	
+		
+		<button onclick="addthisframe()" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-film"></i>  Add this frame <i style="color : green" class="fa fa-plus w3-right"></i></button><br><br>
+
+	</div>
+	
+	<div class="w3-sidebar w3-light-grey " style="width:240px;right:0; "><br><br>
+		
+		<b style=" margin-left:10px; text-align: left; font-size: 18px;"><i class="fa fa-film"></i> Add frames to list</b>
+		<button onclick="createnewframe()" id="addfirstframebutton" style="width:205; margin-left:15px; text-align: left; display:block" class="w3-button w3-light-grey"><i class="fa fa-plus " style="color : green"></i>  Add a first frame </button>	
+		
+		<div id ="addframes">	
+			
+		</div><br><br>
+			
+		<b style=" margin-left:10px; text-align: left; font-size: 18px;"><i class="fa fa-film"></i> Video manipulations</b>
+				
+		<button onclick="myFunction('Demo5')" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-forward"></i>  Set speed <span style="color:#FF0000">*</span><i class="fa fa-chevron-down w3-right"></i></button>
+		<div id="Demo5" class="w3-hide w3-light-grey">
+			<input id="FPS" style='width:150; margin-left:47px;' placeholder='Max FPS : 24'>
+		</div>
+		
+		<button onclick="playvideo()" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-play"></i>  Play <i class="fa fa-toggle-off w3-right"></i></button>		
+		<button onclick="stopvideo()" style="width:205; margin-left:15px; text-align: left;" class="w3-button w3-light-grey"><i class="fa fa-stop"></i>  Stop <i class="fa fa-toggle-on w3-right"></i></button>
+		
+		<a id="scale" class="w3-display-bottomright" style=" margin-bottom:7px;margin-right:8px;"> Scale : 100%</a>
+	</div>
+	
+	<div class="w3-grey w3-top"style="width:100%; height:30px; opacity: .5;"></div>
+	<div class="w3-grey w3-bottom"style="width:100%; height:30px; opacity: .5;"></div>
+	<div class="w3-bottom"style="width:100%; height: 8px;">
+		<div id="myBar" style="width:25%; height: 8px; background: #696969"></div>
+	</div>
+		
+	
+	
+	<div class="workspace"> 
+		<table  border="0" cellpadding="0" cellspacing="0" id="tftpixels" style="display:block; ">
+			<tbody class="w3-display-middle"id = "dynamictbody" >
+				<tr>
+				</tr>
+			</tbody>
+		</table>		
+		<table class="w3-display-middle"id="tftsnippet" style="font-family: Consolas;font-size: 17.5px; display:none ">
+			<tbody >
+				<tr>
+					<td >													
+					</td>
+				</tr>
+			</tbody>
+		</table>		
+	</div>	
+	
+		<script src="bignumber.js"></script>	
+		<!-- <script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.1.0/bignumber.min.js'></script> -->
+		
+		<script>
+		
+		function pixclk(r,e){
+		window.jQuerypix[r][e]=!window.jQuerypix[r][e];
+		update();
+		}
+		
+		function eraseAll(){	
+			for(var r=0;window.jQueryyl>r;r++)
+				for(var e=0;window.jQueryxl>e;e++)
+					window.jQuerypix[e][r]=0;	
+			update();
+			document.getElementById("importedproject").value = "";
+			document.getElementById("hexoutput").value = "";
+			document.getElementById("binoutput").value = "";
+		}
+		
+		function clrall(){			
+			for(var r=0;window.jQueryyl>r;r++)
+				for(var e=0;window.jQueryxl>e;e++)
+					window.jQuerypix[e][r]=0;	
+			update();		
+			if (document.getElementById("importedproject").value){
+				var importProject = document.getElementById("importedproject").value;	
+				if (importProject[1] == "x"){
+					var hex = (importProject.split("x"))[1];
+					var bighex = new BigNumber(hex,16)
+					var bin = bighex.toString(2);
+					while ((bin.length)<(window.width*window.height)){
+						bin = "0"+ bin;
+					}
+					//console.log("0x"+bin);	
+					importProject = "0b"+bin;
+				}
+				
+				var matrixproject = [];
+				var linesproject = "";
+				var pixelproject = "";
+				let indiceproject = 2;
+				for (let line = 0; line < window.height; line++){
+					for(let pixel = 0; pixel < window.width; pixel++){
+						pixelproject += importProject[indiceproject];						
+						if (importProject[indiceproject] == '1'){
+							pixclk(pixel,line);
+						}
+						indiceproject++;
+					}
+					matrixproject[line] = pixelproject;					
+					pixelproject = "";
+				}			
+			}
+		}
+		
+		function decbin(r,e){
+			for(var y="";e--;)
+				y+=" "+(r>>e&1).toString();
+		return y
+		}
+					
+		function update(){		
+			var r="";
+			var e=Array(window.jQueryyl);
+			var y=document.getElementById("tftsnippet").rows;
+			var u=document.getElementById("tftpixels").rows;
+			
+			for(var l=0;l<window.jQueryyl;l++){
+				e[l]=0;				
+				for(var i=0;i<window.jQueryxl;i++){
+					i>=window.jQueryxl||l>=window.jQueryyl?u[l].cells[i].innerHTML="":0==window.jQuerypix[i][l]?u[l].cells[i].innerHTML='<div class="pixel"></div>':u[l].cells[i].innerHTML='<div class="pixel selected"></div>';
+					window.jQuerypix[i][l]&&(e[l]+=1<<window.jQueryxl-i-1);
+				}
+				window.jQueryyl>l&&(r+=decbin(e[l],window.width),window.jQueryyl-1>l&&(r+="<br>")); //c'est ici que chaque ligne binaire se construit en sortie				
+				
+			}				
+			y[0].cells[0].innerHTML=r;
+			document.getElementById("binoutput").value = "0b"+r.replaceAll("<br>","").replaceAll(" ","");	
+			var bin = new BigNumber(document.getElementById("binoutput").value,2);
+			var hex = bin.toString(16).toUpperCase();
+			document.getElementById("hexoutput").value = "0x"+hex;	
+			
+			
+		}
+					
+			
+		function setSizing(){
+			
+			var width = document.getElementById("width_input").value;
+			var height = document.getElementById("height_input").value;
+			window.width = width;
+			window.height = height;
+			
+			var tableBody = document.getElementById("dynamictbody");
+			 
+			while (tableBody.hasChildNodes()) {
+			  tableBody.removeChild(tableBody.lastChild);
+			}
+						
+			
+		    for (var i = 0; i < height; i++) {
+				var tr = document.createElement('TR');
+				tableBody.appendChild(tr);
+				for (var j = 0; j < width; j++) {
+				  var td = document.createElement('TD');				  
+				  td.setAttribute("onclick", "pixclk("+j+","+i+")");
+				  var div = document.createElement('DIV');
+				  div.setAttribute("class", "pixel");
+				  td.appendChild(div);
+				  tr.appendChild(td);
+				}
+				tableBody.appendChild(tr);
+			}
+			
+			for(var jQueryxl=width,jQueryyl=height,jQuerypix=Array(jQueryxl),jQueryx=0;jQueryxl>jQueryx;jQueryx++){ //c'est ici que sont bind les cases sur base des dimentions choisies jQueryyl et jQueryxl
+				jQuerypix[jQueryx]=Array(jQueryyl)
+				window.addEventListener("load",function(){
+					for(var r=0;jQueryyl>r;r++)
+						for(var e=0;jQueryxl>e;e++)
+							jQuerypix[e][r]=0},!1)
+							
+			}
+			//mise en global des variables suivantes
+			window.jQueryxl = jQueryxl;
+			window.jQueryyl = jQueryyl;
+			window.jQuerypix = jQuerypix;
+			window.jQueryx = jQueryx;
+			clrall();
+			//document.getElementById("binoutput").value = "";
+			//document.getElementById("hexoutput").value = "";
+			
+			
+		}
+		
+		function bingenerator() {
+			var copyText = document.getElementById("binoutput");			
+			copyText.select();
+			copyText.setSelectionRange(0, 99999); // For mobile devices
+			navigator.clipboard.writeText(copyText.value);		
+			copyText.value = "Copied ! ";
+		}
+		
+		function hexgenerator() {
+			var copyText = document.getElementById("hexoutput");			
+			copyText.select();
+			copyText.setSelectionRange(0, 99999); // For mobile devices
+			navigator.clipboard.writeText(copyText.value);		
+			copyText.value = "Copied ! ";
+		}
+			
+			
+		function toggleMatrixOrArray() {
+			var PixelsArray = document.getElementById("tftpixels");			
+			var BinaryArray = document.getElementById("tftsnippet");		
+			
+			if (PixelsArray.style.display !== "none") {
+				PixelsArray.style.display = "none";
+				BinaryArray.style.display = "block";
+				document.getElementById("toggleMatrixOrArray1").innerHTML = '<i class="fa fa-th"></i>  Show pixel array <i class="fa fa-toggle-off w3-right"></i>'
+				document.getElementById("toggleMatrixOrArray2").innerHTML = '<i class="fa fa-th"></i>  Show pixel array <i class="fa fa-toggle-off w3-right"></i>'
+			} 
+			else {
+				PixelsArray.style.display = "block";
+				BinaryArray.style.display = "none";
+				document.getElementById("toggleMatrixOrArray1").innerHTML = '<i class="fa fa-th"></i>  Show binary array <i class="fa fa-toggle-on w3-right"></i>'
+				document.getElementById("toggleMatrixOrArray2").innerHTML = '<i class="fa fa-th"></i>  Show binary array <i class="fa fa-toggle-on w3-right"></i>'
+			}
+		}
+
+		function myFunction(id) {
+		  var x = document.getElementById(id);
+		  if (x.className.indexOf("w3-show") == -1) {
+			x.className += " w3-show";
+		  } else { 
+			x.className = x.className.replace(" w3-show", "");
+		  }
+		}
+		
+		
+		const zoomElement = document.querySelector(".workspace");
+		let zoom = 1;
+		const ZOOM_SPEED = 0.1;
+		
+		document.addEventListener("wheel", function (e) {
+		  if (e.deltaY > 0 && zoom<4) {
+			zoomElement.style.transform = `scale(${(zoom += ZOOM_SPEED)})`;			
+		  } 
+		  else if ((e.deltaY<0) && zoom>0.2){
+			zoomElement.style.transform = `scale(${(zoom -= ZOOM_SPEED)})`;		
+		  }
+		  document.getElementById("scale").innerHTML = "Scale : " + ((zoom*100).toString().split('.'))[0] +"%";		  
+		  document.getElementById("myBar").style.width = ((zoom*100/4)) + "%";	  
+		});
+		
+		var frames = -1;
+		function createnewframe(){			
+			frames += 1;
+			if (frames+1<=99){							
+				var div = document.createElement('DIV');
+				div.setAttribute("id", "frame"+(frames+1).toString());
+				document.getElementById('addframes').appendChild(div);
+				div.innerHTML = "<span style=' margin-left:20px;'>"+(frames+1).toString()+".</span>"
+				div.innerHTML += "<input id='newframe"+(frames+1).toString()+"\'"+" style='width:120px;  margin-left:14px;' placeholder='New frame'>"
+				div.innerHTML += "<span class='w3-button' style=' margin-left:4px;' onclick=myFunction('newframemenu"+(frames+1).toString()+"\'"+") > <i class='fa fa-chevron-down w3-right'></i>	</span>"
+				var divmenuframe = document.createElement('DIV'); 		
+				div.appendChild(divmenuframe);
+				divmenuframe.setAttribute("class", "w3-hide 3-light-grey");
+				divmenuframe.setAttribute("id", "newframemenu"+(frames+1).toString());
+				divmenuframe.innerHTML += "<span class='w3-button' style='width:32%' onclick=deletethisframe("+(frames+1).toString()+") > <i style='color : red' class='fa fa-times'></i> Del.</span>"
+				divmenuframe.innerHTML += "<span class='w3-button' style='width:32%' onclick=createnewframe() > <i style='color : green' class='fa fa-plus'></i> Add</span>"
+				divmenuframe.innerHTML += "<span class='w3-button' style='width:32%' onclick=editframe('newframe"+(frames+1).toString()+"\'"+") > <i class='fa fa-pencil-square-o'></i> Edit</span>"	
+				document.getElementById('addfirstframebutton').style.display = "none";
+				
+				if (frames>8){
+					document.getElementById("newframe"+(frames+1).toString()).style.marginLeft = "6px";
+				}
+				if (frames+1==11){
+					document.getElementById("newframe"+(frames+1).toString()).style.marginLeft = "7px";
+				}
+			}							
+		}
+				
+		function addthisframe(){					
+			createnewframe();			
+			if (frames+1<=99){	document.getElementById("newframe"+(frames+1).toString()).value = document.getElementById("hexoutput").value;	}		
+		}
+		
+		function editframe(frame){
+			document.getElementById("importedproject").value = document.getElementById(frame).value;
+			setSizing();
+		}
+		
+		function deletethisframe(frame){
+			var currentframe = document.getElementById("frame"+(frame).toString());			
+			currentframe.remove();
+			
+		}
+		
+		
+		
+		function playvideo(){
+			var imageposition = 0;
+			var listofframes = [];
+			var listofidframes = [];
+			for(var i =0 ; i < 100; i++){
+				if (document.getElementById("newframe"+i.toString())){
+					listofframes[imageposition] = document.getElementById("newframe"+i.toString()).value;
+					listofidframes[imageposition] = i;
+					imageposition +=1;
+				}
+			}
+						
+			var FPS = document.getElementById("FPS").value;	
+			if ((FPS == 0) || (FPS > 24)){FPS = 1; }
+			
+			var seconds = 0;
+			stopvideo();
+			setInterval(time, (1/FPS)*1000);
+			function time() {
+			  console.log(seconds.toString());
+			  document.getElementById("importedproject").value = listofframes[seconds%listofframes.length];
+			  
+			  for(var id= 0; id < listofidframes.length; id ++){ 
+				if (document.getElementById("newframe"+(listofidframes[id]))){
+					document.getElementById("newframe"+(listofidframes[id]).toString()).style.background = "white";
+				}
+			  }
+			  
+			  
+			  if (document.getElementById("newframe"+(listofidframes[seconds%listofframes.length]).toString())){
+				document.getElementById("newframe"+(listofidframes[seconds%listofframes.length]).toString()).style.background = "#CEE3C1";
+			  }
+			  setSizing();
+			  seconds++;
+			}	
+		
+		}
+		
+		function stopvideo(){
+			for(var i = 0; i < 1000; i++) { clearInterval(i); }
+		}
+		</script>			
+	</body>
+</html>
