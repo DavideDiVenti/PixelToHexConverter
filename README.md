@@ -1,5 +1,5 @@
 # PixelToHexConverter Website
-https://davidediventi.github.io/PixelToHexConverter/
+Website : https://davidediventi.github.io/PixelToHexConverter/
 
 * L'idée de ce logiciel est que l'utilisateur puisse créer des icones et animations de ces-derniers en pixelart. 
 * A chaque interraction le logiciel exporte l'image sous forme d'une chaine hexadécimale et/ou binaire. 
